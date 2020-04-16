@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="897.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewer3d.FXMLDocumentController">
    <top>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
@@ -18,7 +17,10 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
+                    <MenuItem id="menuItemFIleOpen" mnemonicParsing="false" onAction="#handleMenuItemOpenAction" text="Open" />
+                        <MenuItem id="menuItemFileImport" mnemonicParsing="false" onAction="#handleMenuItemImportAction" text="Import" />
+                        <MenuItem id="menuItemFileSave" mnemonicParsing="false" onAction="#handleMenuItemSaveAction" text="Save" />
+                        <MenuItem id="menuItemFileClose" mnemonicParsing="false" onAction="#handleMenuItemCloseAction" text="Close" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">

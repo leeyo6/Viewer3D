@@ -18,6 +18,29 @@ import javafx.scene.control.Label;
  */
 public class FXMLDocumentController implements Initializable {
     
+        @FXML
+    private void handleMenuItemOpenAction(ActionEvent event) {
+        System.out.println("Open");
+
+    }
+
+    @FXML
+    private void handleMenuItemImportAction(ActionEvent event) {
+        System.out.println("Import");
+
+    }
+
+    @FXML
+    private void handleMenuItemSaveAction(ActionEvent event) {
+        System.out.println("Save");
+
+    }
+
+    @FXML
+    private void handleMenuItemCloseAction(ActionEvent event) {
+        System.out.println("Close");
+
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
