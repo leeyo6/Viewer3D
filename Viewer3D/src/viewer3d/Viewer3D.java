@@ -17,6 +17,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Point3D;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -50,6 +51,7 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;
@@ -67,6 +69,7 @@ public class Viewer3D extends Application {
     final moleculesampleapp.Xform axisGroup = new moleculesampleapp.Xform();
     final moleculesampleapp.Xform moleculeGroup = new moleculesampleapp.Xform();
     final moleculesampleapp.Xform surfaceGroup = new moleculesampleapp.Xform();
+    final moleculesampleapp.Xform lineGroup = new moleculesampleapp.Xform();
     final moleculesampleapp.Xform world = new moleculesampleapp.Xform();
     final PerspectiveCamera camera = new PerspectiveCamera(true);
     final moleculesampleapp.Xform cameraXform = new moleculesampleapp.Xform();
@@ -154,6 +157,7 @@ public class Viewer3D extends Application {
         primaryStage.show();
         
     }
+    
     private void buildMenuBar() {
         // create a menu 
         Menu menuFile = new Menu("File");
@@ -229,6 +233,24 @@ public class Viewer3D extends Application {
         world.getChildren().addAll(axisGroup);
     }
 
+    public Cylinder createConnection(Point3D origin, Point3D target) {
+        Point3D yAxis = new Point3D(0, 1, 0);
+        Point3D diff = target.subtract(origin);
+        double height = diff.magnitude();
+
+        Point3D mid = target.midpoint(origin);
+        Translate moveToMidpoint = new Translate(mid.getX(), mid.getY(), mid.getZ());
+
+        Point3D axisOfRotation = diff.crossProduct(yAxis);
+        double angle = Math.acos(diff.normalize().dotProduct(yAxis));
+        Rotate rotateAroundCenter = new Rotate(-Math.toDegrees(angle), axisOfRotation);
+
+        Cylinder line = new Cylinder(.01, height);
+
+        line.getTransforms().addAll(moveToMidpoint, rotateAroundCenter);
+
+        return line;
+    }
     private void handleMouse(SubScene scene, final Node rootV) {
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -312,6 +334,7 @@ public class Viewer3D extends Application {
             }
         });
     }
+
 
     private void buildMolecule() {
         //======================================================================
@@ -688,6 +711,7 @@ public class Viewer3D extends Application {
             addTriangle(coordsS.get(i), keySetNodes);
         }
         world.getChildren().add(surfaceGroup);
+        world.getChildren().addAll(lineGroup);
     }
 
     public void addTriangle(int[] ids, HashMap<Integer, double[]> points) {
@@ -731,8 +755,11 @@ public class Viewer3D extends Application {
         float hs2 = s / 3;
         // coordinates of the mapped image
         moleculesampleapp.Xform allElements = new moleculesampleapp.Xform();
+        moleculesampleapp.Xform allLines = new moleculesampleapp.Xform();
         moleculesampleapp.Xform frontelements = new moleculesampleapp.Xform();
         moleculesampleapp.Xform backelements = new moleculesampleapp.Xform();
+        moleculesampleapp.Xform oneline = new moleculesampleapp.Xform();
+        moleculesampleapp.Xform secondline = new moleculesampleapp.Xform();
         allElements.getChildren().add(backelements);
         allElements.getChildren().add(frontelements);
         
@@ -745,9 +772,34 @@ public class Viewer3D extends Application {
                 xcp3, ycp3, zcp3, // A 0 Top of Pyramid
                 xcp1, ycp1, zcp1, // B 1
                 xcp2, ycp2, zcp2, // C 2
-                 xcp2, ycp2, zcp2, // B 1
-                xcp1, ycp1, zcp1 // E 4
+                 xcp1, ycp1, zcp1, // B 1
+                xcp2, ycp2, zcp2 // E 4
         );
+        
+        //Create first line
+        Point3D startPoint = new Point3D(xcp2, ycp2, zcp2);
+        Point3D endPoint = new Point3D(xcp1, ycp1, zcp1);
+                
+        final Shape3D oneLine = createConnection(startPoint, endPoint);
+        
+        final PhongMaterial blueMaterial = new PhongMaterial();
+        blueMaterial.setDiffuseColor(Color.DARKBLUE);
+        blueMaterial.setSpecularColor(Color.BLUE);
+        
+        oneLine.setMaterial(blueMaterial);
+        
+        
+        Point3D startPointb = new Point3D(xcp3, ycp3, zcp3);
+        Point3D endPointb = new Point3D(xcp2, ycp2, zcp2);
+        final Shape3D endLine = createConnection(startPointb, endPointb);
+        
+        endLine.setMaterial(blueMaterial);
+        
+        lineGroup.getChildren().addAll(oneLine,endLine);
+        
+        
+        
+        ////
         float x0 = 0.0f;
         float y0 = 0.0f;
         float x1 = 1.0f;
@@ -768,6 +820,19 @@ public class Viewer3D extends Application {
         );
         MeshView pyramid = new MeshView(pyramidMesh);
         pyramid.setDrawMode(DrawMode.FILL);
+        /*pyramid.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                PhongMaterial blackMaterial = new PhongMaterial();
+                blackMaterial.setDiffuseColor(Color.BLACK);
+                blackMaterial.setSpecularColor(Color.BLACK);
+                
+                pyramid.setMaterial(blackMaterial);
+            }
+        });*/
+       
+        
         PhongMaterial whiteMaterial = new PhongMaterial();
         whiteMaterial.setDiffuseColor(Color.RED);
         whiteMaterial.setSpecularColor(Color.LIGHTSALMON);
@@ -783,8 +848,8 @@ public class Viewer3D extends Application {
                 xcp1, ycp1, zcp1, // A 0 Top of Pyramid
                 xcp3, ycp3, zcp3, // D 3
                 xcp4, ycp4, zcp4, // C 2
-                xcp4, ycp4, zcp4, // D 3
-                xcp3, ycp3, zcp3 // E 4
+                xcp3, ycp3, zcp3, // D 3
+                xcp4, ycp4, zcp4 // E 4
         );
         pyramidMesh2.getTexCoords().addAll( //
                 x0, y0, // 0
@@ -800,6 +865,27 @@ public class Viewer3D extends Application {
                 4, 0, 3, 1, 2, 3, // EDC (Bottom first triangle clock wise)
                 2, 0, 1, 1, 4, 3 // CBE (Bottom second triangle clock wise)
         );
+        //CreateSecont line
+        Point3D startPoint2 = new Point3D(xcp3, ycp3, zcp3);
+        Point3D endPoint2 = new Point3D(xcp4, ycp4, zcp4);
+                
+        final Shape3D oneLine2 = createConnection(startPoint2, endPoint2);
+        
+    
+        oneLine2.setMaterial(blueMaterial);
+        
+        
+        
+        
+        //Create first line
+        Point3D startPoint2b = new Point3D(xcp1, ycp1, zcp1);
+        Point3D endPoint2b = new Point3D(xcp4, ycp4, zcp4);
+        final Shape3D endLine2 = createConnection(startPoint2b, endPoint2b);
+        endLine2.setMaterial(blueMaterial);
+        
+        lineGroup.getChildren().addAll(oneLine2,endLine2);
+        
+        
         MeshView pyramid2 = new MeshView(pyramidMesh2);
         pyramid2.setDrawMode(DrawMode.FILL);
         PhongMaterial whiteMaterial2 = new PhongMaterial();
@@ -812,6 +898,55 @@ public class Viewer3D extends Application {
         backelements.getChildren().add(pyramid2);
         frontelements.getChildren().add(pyramid);
         
+        
+         pyramid.setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                PhongMaterial blackMaterial = new PhongMaterial();
+                blackMaterial.setDiffuseColor(Color.BLACK);
+                blackMaterial.setSpecularColor(Color.BLACK);
+                
+                pyramid.setMaterial(blackMaterial);
+                pyramid2.setMaterial(blackMaterial);
+            }
+        });
+        pyramid.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                PhongMaterial blackMaterial = new PhongMaterial();
+                blackMaterial.setDiffuseColor(Color.RED);
+                blackMaterial.setSpecularColor(Color.LIGHTSALMON);
+                
+                pyramid.setMaterial(blackMaterial);
+                pyramid2.setMaterial(blackMaterial);
+            }
+        });
+        pyramid2.setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                PhongMaterial blackMaterial = new PhongMaterial();
+                blackMaterial.setDiffuseColor(Color.BLACK);
+                blackMaterial.setSpecularColor(Color.BLACK);
+                
+                pyramid.setMaterial(blackMaterial);
+                pyramid2.setMaterial(blackMaterial);
+            }
+        });
+        pyramid2.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                PhongMaterial blackMaterial = new PhongMaterial();
+                blackMaterial.setDiffuseColor(Color.RED);
+                blackMaterial.setSpecularColor(Color.LIGHTSALMON);
+                
+                pyramid.setMaterial(blackMaterial);
+                pyramid2.setMaterial(blackMaterial);
+            }
+        });
         surfaceGroup.getChildren().add(allElements);
         
     }
