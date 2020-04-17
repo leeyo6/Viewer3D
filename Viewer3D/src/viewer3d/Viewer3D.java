@@ -10,6 +10,8 @@ import com.sun.j3d.utils.geometry.NormalGenerator;
 import com.sun.j3d.utils.geometry.Stripifier;
 import com.sun.j3d.utils.geometry.Triangulator;
 import com.sun.javafx.sg.prism.NGPhongMaterial;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -50,6 +52,8 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javax.media.j3d.Appearance;
+import javax.media.j3d.ColoringAttributes;
+import javax.media.j3d.LineStripArray;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 
@@ -107,6 +111,7 @@ public class Viewer3D extends Application {
         buildCamera();
         buildAxes();
         createSurface();
+        //createPyramid();
         //buildMolecule();
 
         rootV.getChildren().add(world);
@@ -211,9 +216,9 @@ public class Viewer3D extends Application {
         blueMaterial.setDiffuseColor(Color.DARKBLUE);
         blueMaterial.setSpecularColor(Color.BLUE);
 
-        final Box xAxis = new Box(AXIS_LENGTH, 10, 10);
-        final Box yAxis = new Box(10, AXIS_LENGTH, 10);
-        final Box zAxis = new Box(10, 10, AXIS_LENGTH);
+        final Box xAxis = new Box(AXIS_LENGTH, 1, 1);
+        final Box yAxis = new Box(1, AXIS_LENGTH, 1);
+        final Box zAxis = new Box(1, 1, AXIS_LENGTH);
 
         xAxis.setMaterial(redMaterial);
         yAxis.setMaterial(greenMaterial);
@@ -404,6 +409,7 @@ public class Viewer3D extends Application {
         return noiseArray;
 
     }
+    
     public final static class ImprovedNoise {
     static public double noise(double x, double y, double z) {
        int X = (int)Math.floor(x) & 255,                  // FIND UNIT CUBE THAT
@@ -451,18 +457,19 @@ public class Viewer3D extends Application {
     };
     static { for (int i=0; i < 256 ; i++) p[256+i] = p[i] = permutation[i]; }
     }
+    
     public void createSurface() {
         //Create Mesh new
         // mesh
         int size = 100;
         // perlin noise
-        float[][] noiseArray = createNoise( size);
+        /*float[][] noiseArray = createNoise( size);
         
         TriangleMesh mesh = new TriangleMesh();
 
         // create points for x/z
         float amplification = 100; // amplification of noise
-
+        
         for (int x = 0; x < size; x++) {
             for (int z = 0; z < size; z++) {
                 mesh.getPoints().addAll(x, noiseArray[x][z] * amplification, z);
@@ -526,56 +533,361 @@ public class Viewer3D extends Application {
         meshView.setCullFace(CullFace.NONE);
         meshView.setDrawMode(DrawMode.LINE);
         meshView.setDepthTest(DepthTest.ENABLE);
-        
+         */
         //Create Mesh old
+
+        HashMap<Integer, double[]> keySetNodes = new HashMap();
+
+        keySetNodes.put(1, new double[]{0, 0.125, 0});
+        keySetNodes.put(2, new double[]{6, 0.125, 0});
+        keySetNodes.put(3, new double[]{12, 0.125, 0});
+        keySetNodes.put(4, new double[]{18, 0.125, 0});
+        keySetNodes.put(5, new double[]{24, 0.125, 0});
+        keySetNodes.put(6, new double[]{30, 0.125, 0});
+        keySetNodes.put(7, new double[]{36, 0.125, 0});
+        keySetNodes.put(8, new double[]{42, 0.125, 0});
+        keySetNodes.put(9, new double[]{48, 0.125, 0});
+        keySetNodes.put(10, new double[]{54, 0.125, 0});
+        keySetNodes.put(11, new double[]{60, 0.125, 0});
+        keySetNodes.put(12, new double[]{60, 5, 0});
+        keySetNodes.put(13, new double[]{60, 9.875, 0});
+        keySetNodes.put(14, new double[]{54, 9.875, 0});
+        keySetNodes.put(15, new double[]{48, 9.875, 0});
+        keySetNodes.put(16, new double[]{42, 9.875, 0});
+        keySetNodes.put(17, new double[]{36, 9.875, 0});
+        keySetNodes.put(18, new double[]{30, 9.875, 0});
+        keySetNodes.put(19, new double[]{24, 9.875, 0});
+        keySetNodes.put(20, new double[]{18, 9.875, 0});
+        keySetNodes.put(21, new double[]{12, 9.875, 0});
+        keySetNodes.put(22, new double[]{6, 9.875, 0});
+        keySetNodes.put(23, new double[]{0, 9.875, 0});
+        keySetNodes.put(24, new double[]{0, 5, 0});
+        keySetNodes.put(25, new double[]{6, 5, 0});
+        keySetNodes.put(26, new double[]{12, 5, 0});
+        keySetNodes.put(27, new double[]{18, 5, 0});
+        keySetNodes.put(28, new double[]{24, 5, 0});
+        keySetNodes.put(29, new double[]{30, 5, 0});
+        keySetNodes.put(30, new double[]{36, 5, 0});
+        keySetNodes.put(31, new double[]{42, 5, 0});
+        keySetNodes.put(32, new double[]{48, 5, 0});
+        keySetNodes.put(33, new double[]{54, 5, 0});
+        keySetNodes.put(34, new double[]{60, 9.875, 2});
+        keySetNodes.put(46, new double[]{0, 9.875, 2});
+        keySetNodes.put(47, new double[]{6, 9.875, 2});
+        keySetNodes.put(48, new double[]{12, 9.875, 2});
+        keySetNodes.put(49, new double[]{18, 9.875, 2});
+        keySetNodes.put(50, new double[]{24, 9.875, 2});
+        keySetNodes.put(51, new double[]{30, 9.875, 2});
+        keySetNodes.put(52, new double[]{36, 9.875, 2});
+        keySetNodes.put(53, new double[]{42, 9.875, 2});
+        keySetNodes.put(54, new double[]{48, 9.875, 2});
+        keySetNodes.put(55, new double[]{54, 9.875, 2});
+        keySetNodes.put(56, new double[]{60, 9.875, -2});
+        keySetNodes.put(57, new double[]{54, 9.875, -2});
+        keySetNodes.put(58, new double[]{48, 9.875, -2});
+        keySetNodes.put(59, new double[]{42, 9.875, -2});
+        keySetNodes.put(60, new double[]{36, 9.875, -2});
+        keySetNodes.put(61, new double[]{30, 9.875, -2});
+        keySetNodes.put(62, new double[]{24, 9.875, -2});
+        keySetNodes.put(63, new double[]{18, 9.875, -2});
+        keySetNodes.put(64, new double[]{12, 9.875, -2});
+        keySetNodes.put(65, new double[]{6, 9.875, -2});
+        keySetNodes.put(66, new double[]{0, 9.875, -2});
+        keySetNodes.put(67, new double[]{60, 0.125, 2});
+        keySetNodes.put(79, new double[]{0, 0.125, 2});
+        keySetNodes.put(80, new double[]{6, 0.125, 2});
+        keySetNodes.put(81, new double[]{12, 0.125, 2});
+        keySetNodes.put(82, new double[]{18, 0.125, 2});
+        keySetNodes.put(83, new double[]{24, 0.125, 2});
+        keySetNodes.put(84, new double[]{30, 0.125, 2});
+        keySetNodes.put(85, new double[]{36, 0.125, 2});
+        keySetNodes.put(86, new double[]{42, 0.125, 2});
+        keySetNodes.put(87, new double[]{48, 0.125, 2});
+        keySetNodes.put(88, new double[]{54, 0.125, 2});
+        keySetNodes.put(89, new double[]{60, 0.125, -2});
+        keySetNodes.put(90, new double[]{54, 0.125, -2});
+        keySetNodes.put(91, new double[]{48, 0.125, -2});
+        keySetNodes.put(92, new double[]{42, 0.125, -2});
+        keySetNodes.put(93, new double[]{36, 0.125, -2});
+        keySetNodes.put(94, new double[]{30, 0.125, -2});
+        keySetNodes.put(95, new double[]{24, 0.125, -2});
+        keySetNodes.put(96, new double[]{18, 0.125, -2});
+        keySetNodes.put(97, new double[]{12, 0.125, -2});
+        keySetNodes.put(98, new double[]{6, 0.125, -2});
+        keySetNodes.put(99, new double[]{0, 0.125, -2});
+        keySetNodes.put(100, new double[]{60, 5, 0});
+
+        ArrayList<int[]> coordsS = new ArrayList();
+        coordsS.add(new int[]{1, 2, 25, 24});
+        coordsS.add(new int[]{2, 3, 26, 25});
+        coordsS.add(new int[]{3, 4, 27, 26});
+        coordsS.add(new int[]{4, 5, 28, 27});
+        coordsS.add(new int[]{5, 6, 29, 28});
+        coordsS.add(new int[]{6, 7, 30, 29});
+        coordsS.add(new int[]{7, 8, 31, 30});
+        coordsS.add(new int[]{8, 9, 32, 31});
+        coordsS.add(new int[]{9, 10, 33, 32});
+        coordsS.add(new int[]{10, 11, 12, 33});
+        coordsS.add(new int[]{24, 25, 22, 23});
+        coordsS.add(new int[]{25, 26, 21, 22});
+        coordsS.add(new int[]{26, 27, 20, 21});
+        coordsS.add(new int[]{27, 28, 19, 20});
+        coordsS.add(new int[]{28, 29, 18, 19});
+        coordsS.add(new int[]{29, 30, 17, 18});
+        coordsS.add(new int[]{30, 31, 16, 17});
+        coordsS.add(new int[]{31, 32, 15, 16});
+        coordsS.add(new int[]{32, 33, 14, 15});
+        coordsS.add(new int[]{33, 12, 13, 14});
+        coordsS.add(new int[]{34, 13, 14, 55});
+        coordsS.add(new int[]{55, 14, 15, 54});
+        coordsS.add(new int[]{54, 15, 16, 53});
+        coordsS.add(new int[]{53, 16, 17, 52});
+        coordsS.add(new int[]{52, 17, 18, 51});
+        coordsS.add(new int[]{51, 18, 19, 50});
+        coordsS.add(new int[]{50, 19, 20, 49});
+        coordsS.add(new int[]{49, 20, 21, 48});
+        coordsS.add(new int[]{48, 21, 22, 47});
+        coordsS.add(new int[]{47, 22, 23, 46});
+        coordsS.add(new int[]{23, 22, 65, 66});
+        coordsS.add(new int[]{22, 21, 64, 65});
+        coordsS.add(new int[]{21, 20, 63, 64});
+        coordsS.add(new int[]{20, 19, 62, 63});
+        coordsS.add(new int[]{19, 18, 61, 62});
+        coordsS.add(new int[]{18, 17, 60, 61});
+        coordsS.add(new int[]{17, 16, 59, 60});
+        coordsS.add(new int[]{16, 15, 58, 59});
+        coordsS.add(new int[]{15, 14, 57, 58});
+        coordsS.add(new int[]{14, 13, 56, 57});
+        coordsS.add(new int[]{67, 11, 10, 88});
+        coordsS.add(new int[]{88, 10, 9, 87});
+        coordsS.add(new int[]{87, 9, 8, 86});
+        coordsS.add(new int[]{86, 8, 7, 85});
+        coordsS.add(new int[]{85, 7, 6, 84});
+        coordsS.add(new int[]{84, 6, 5, 83});
+        coordsS.add(new int[]{83, 5, 4, 82});
+        coordsS.add(new int[]{82, 4, 3, 81});
+        coordsS.add(new int[]{81, 3, 2, 80});
+        coordsS.add(new int[]{80, 2, 1, 79});
+        coordsS.add(new int[]{1, 2, 98, 99});
+        coordsS.add(new int[]{2, 3, 97, 98});
+        coordsS.add(new int[]{3, 4, 96, 97});
+        coordsS.add(new int[]{4, 5, 95, 96});
+        coordsS.add(new int[]{5, 6, 94, 95});
+        coordsS.add(new int[]{6, 7, 93, 94});
+        coordsS.add(new int[]{7, 8, 92, 93});
+        coordsS.add(new int[]{8, 9, 91, 92});
+        coordsS.add(new int[]{9, 10, 90, 91});
+        coordsS.add(new int[]{10, 11, 89, 90});
+
+        //Point 1 (x,y,z)
+        //float f = (float)d;
+        //Point 2 (x,y,z)
+        //Point 3 (x,y,z)
+        //Point 4 (x,y,z)
+        for (int i = 0; i < coordsS.size(); i++) {
+            addTriangle(coordsS.get(i), keySetNodes);
+        }
+        world.getChildren().add(surfaceGroup);
+    }
+
+    public void addTriangle(int[] ids, HashMap<Integer, double[]> points) {
         
-      /*  TriangleMesh pyramidMesh = new TriangleMesh();
-        pyramidMesh.getTexCoords().addAll(0, 0);
-        float h = 15;                    // Height
+
+        // float d = -s / 3;// Side
+        //Point 1 (x,y,z)
+        double xp1 = points.get(ids[0])[0];
+        double yp1 = points.get(ids[0])[1];
+        double zp1 = points.get(ids[0])[2];
+
+        float xcp1 = (float) yp1;
+        float ycp1 = (float) -zp1;
+        float zcp1 = (float) -xp1;
+        //Point 2 (x,y,z)
+        double xp2 = points.get(ids[1])[0];
+        double yp2 = points.get(ids[1])[1];
+        double zp2 = points.get(ids[1])[2];
+
+        float xcp2 = (float) yp2;
+        float ycp2 = (float) -zp2;
+        float zcp2 = (float) -xp2;
+        //Point 3 (x,y,z)
+        double xp3 = points.get(ids[2])[0];
+        double yp3 = points.get(ids[2])[1];
+        double zp3 = points.get(ids[2])[2];
+        float xcp3 = (float) yp3;
+        float ycp3 = (float) -zp3;
+        float zcp3 = (float) -xp3;
+        //Point 4 (x,y,z)
+        double xp4 = points.get(ids[3])[0];
+        double yp4 = points.get(ids[3])[1];
+        double zp4 = points.get(ids[3])[2];
+        float xcp4 = (float) yp4;
+        float ycp4 = (float) -zp4;
+        float zcp4 = (float) -xp4;
+
+        float h = 150; // Height
+        float s = 150; // Side
+        float hs = s / 2;
+        float hs2 = s / 3;
+        // coordinates of the mapped image
+        moleculesampleapp.Xform allElements = new moleculesampleapp.Xform();
+        moleculesampleapp.Xform frontelements = new moleculesampleapp.Xform();
+        moleculesampleapp.Xform backelements = new moleculesampleapp.Xform();
+        allElements.getChildren().add(backelements);
+        allElements.getChildren().add(frontelements);
+        
+        //TriangleMesh pyramidMesh = new TriangleMesh();
+        TriangleMesh pyramidMesh = new TriangleMesh();     
+        float xcp0 = (xcp1+xcp2+xcp3+xcp4)/4;
+        float ycp0 = (ycp1+ycp2+ycp3+ycp4)/4;
+        float zcp0 = (zcp1+zcp2+zcp3+zcp4)/4;
+        pyramidMesh.getPoints().addAll( //
+                xcp3, ycp3, zcp3, // A 0 Top of Pyramid
+                xcp1, ycp1, zcp1, // B 1
+                xcp2, ycp2, zcp2, // C 2
+                 xcp2, ycp2, zcp2, // B 1
+                xcp1, ycp1, zcp1 // E 4
+        );
+        float x0 = 0.0f;
+        float y0 = 0.0f;
+        float x1 = 1.0f;
+        float y1 = 1.0f;
+        pyramidMesh.getTexCoords().addAll( //
+                x0, y0, // 0
+                x0, y1, // 1
+                x1, y0, // 2
+                x1, y1 // 3
+        );
+        pyramidMesh.getFaces().addAll(// index of point, index of texture, index of point, index of texture, index of point, index of texture
+                0, 0, 1, 1, 2, 3, // ABC (counter clockwise)
+                0, 0, 2, 1, 3, 3, // ACD (counter clockwise)
+                0, 0, 3, 1, 4, 3, // ADE (counter clockwise)
+                0, 0, 4, 1, 1, 3, // AEB (counter clockwise)
+                4, 0, 3, 1, 2, 3, // EDC (Bottom first triangle clock wise)
+                2, 0, 1, 1, 4, 3 // CBE (Bottom second triangle clock wise)
+        );
+        MeshView pyramid = new MeshView(pyramidMesh);
+        pyramid.setDrawMode(DrawMode.FILL);
+        PhongMaterial whiteMaterial = new PhongMaterial();
+        whiteMaterial.setDiffuseColor(Color.RED);
+        whiteMaterial.setSpecularColor(Color.LIGHTSALMON);
+        pyramid.setMaterial(whiteMaterial);
+        pyramid.setTranslateX(0);
+        pyramid.setTranslateY(0);
+        pyramid.setTranslateZ(0);
+        
+        ////TriangleMesh pyramidMesh = new TriangleMesh();
+        TriangleMesh pyramidMesh2 = new TriangleMesh();     
+
+        pyramidMesh2.getPoints().addAll( //
+                xcp1, ycp1, zcp1, // A 0 Top of Pyramid
+                xcp3, ycp3, zcp3, // D 3
+                xcp4, ycp4, zcp4, // C 2
+                xcp4, ycp4, zcp4, // D 3
+                xcp3, ycp3, zcp3 // E 4
+        );
+        pyramidMesh2.getTexCoords().addAll( //
+                x0, y0, // 0
+                x0, y1, // 1
+                x1, y0, // 2
+                x1, y1 // 3
+        );
+        pyramidMesh2.getFaces().addAll(// index of point, index of texture, index of point, index of texture, index of point, index of texture
+                0, 0, 1, 1, 2, 3, // ABC (counter clockwise)
+                0, 0, 2, 1, 3, 3, // ACD (counter clockwise)
+                0, 0, 3, 1, 4, 3, // ADE (counter clockwise)
+                0, 0, 4, 1, 1, 3, // AEB (counter clockwise)
+                4, 0, 3, 1, 2, 3, // EDC (Bottom first triangle clock wise)
+                2, 0, 1, 1, 4, 3 // CBE (Bottom second triangle clock wise)
+        );
+        MeshView pyramid2 = new MeshView(pyramidMesh2);
+        pyramid2.setDrawMode(DrawMode.FILL);
+        PhongMaterial whiteMaterial2 = new PhongMaterial();
+        whiteMaterial2.setDiffuseColor(Color.RED);
+        whiteMaterial2.setSpecularColor(Color.LIGHTSALMON);
+        pyramid2.setMaterial(whiteMaterial2);
+        pyramid2.setTranslateX(0);
+        pyramid2.setTranslateY(0);
+        pyramid2.setTranslateZ(0);
+        backelements.getChildren().add(pyramid2);
+        frontelements.getChildren().add(pyramid);
+        
+        surfaceGroup.getChildren().add(allElements);
+        
+    }
+    public javax.media.j3d.Shape3D plotLines(Point3d coords[]) {
+        //Point3d coords[] = new Point3d[4];
+
+        Appearance app = new Appearance();
+        ColoringAttributes caLines = new ColoringAttributes();
+        caLines.setColor(new Color3f(new java.awt.Color(0, 0, 0)));
+
+        app.setColoringAttributes(caLines);
+   /*     coords[0] = new Point3d(0.0d, 0.0d, 0.0d);
+        coords[1] = new Point3d(-10.0d, 0.0d, 0.0d);
+        coords[2] = new Point3d(-10.0d, -10.0d, 0.0d);
+        coords[3] = new Point3d(0.0d, -10.0d, 0.0d);*/
+
+        int vertexCounts[] = {coords.length};
+
+        LineStripArray lines = new LineStripArray(coords.length,
+                LineStripArray.COORDINATES, vertexCounts);
        
-        float s = 30;  
-         float d = -s / 3;// Side
-        pyramidMesh.getPoints().addAll(
-              /*  0, 0, 0, // Point 0 - Top
-                0, h, -s / 2, // Point 1 - Front
-                0, h, -s / 2, // Point 2 - Left
-                s / 2, h, 0, // Point 3 - Back
-                s / 2, h, 0 // Point 4 - Right
-                0, 0, 0, // Point 0 - Top
-                0, h, -s / 2, // Point 1 - Front
-                -s / 2, h, 0, // Point 2 - Left
-                s / 2, h, 0, // Point 3 - Back
-                0, h, s / 2 // Point 4 - Right*/
-           /*     0, h, -s / 2, // Point 0 - Top
-                0, h, -s / 2, // Point 1 - Front
-                -d, h, 0, // Point 2 - Left
-                s / 2, h, 0, // Point 3 - Back
-                0, h, s / 2 // Point 4 - Right
+        lines.setCoordinates(0, coords);
+        javax.media.j3d.Shape3D shape = new javax.media.j3d.Shape3D(lines, app);
+        return shape;
+    }
+    public void createPyramid() {
+        // create pyramid with diffuse map
+        float h = 150; // Height
+        float s = 150; // Side
+        float hs = s / 2;
+        float hs2 = s / 3;
+        // coordinates of the mapped image
+
+        TriangleMesh pyramidMesh = new TriangleMesh();
+
+        pyramidMesh.getPoints().addAll( //
+                hs, h, -hs, // A 0 Top of Pyramid
+                hs, h, -hs, // B 1
+                hs2, h, hs, // C 2
+                -hs, h, hs, // D 3
+                -hs, h, -hs // E 4
+        );
+        float x0 = 0.0f;
+        float y0 = 0.0f;
+        float x1 = 1.0f;
+        float y1 = 1.0f;
+        pyramidMesh.getTexCoords().addAll( //
+                x0, y0, // 0
+                x0, y1, // 1
+                x1, y0, // 2
+                x1, y1 // 3
         );
 
-        pyramidMesh.getFaces().addAll(
-                0, 0, 2, 0, 1, 0, // Front left face
-                0, 0, 1, 0, 3, 0, // Front right face
-                0, 0, 3, 0, 4, 0, // Back right face
-                0, 0, 4, 0, 2, 0, // Back left face
-                4, 0, 1, 0, 2, 0, // Bottom rear face
-                4, 0, 3, 0, 1, 0 // Bottom front face
+        pyramidMesh.getFaces().addAll(// index of point, index of texture, index of point, index of texture, index of point, index of texture
+                0, 0, 1, 1, 2, 3, // ABC (counter clockwise)
+                0, 0, 2, 1, 3, 3, // ACD (counter clockwise)
+                0, 0, 3, 1, 4, 3, // ADE (counter clockwise)
+                0, 0, 4, 1, 1, 3, // AEB (counter clockwise)
+                4, 0, 3, 1, 2, 3, // EDC (Bottom first triangle clock wise)
+                2, 0, 1, 1, 4, 3 // CBE (Bottom second triangle clock wise)
         );
 
         MeshView pyramid = new MeshView(pyramidMesh);
         pyramid.setDrawMode(DrawMode.FILL);
-     
-        final PhongMaterial whiteMaterial = new PhongMaterial();
+
+        PhongMaterial whiteMaterial = new PhongMaterial();
         whiteMaterial.setDiffuseColor(Color.RED);
-        whiteMaterial.setSpecularColor(Color.LIGHTCYAN);
+        whiteMaterial.setSpecularColor(Color.RED);
         pyramid.setMaterial(whiteMaterial);
         pyramid.setTranslateX(0);
         pyramid.setTranslateY(0);
-        pyramid.setTranslateZ(0);*/
-        surfaceGroup.getChildren().add(meshView);
+        pyramid.setTranslateZ(0);
+        surfaceGroup.getChildren().add(pyramid);
         world.getChildren().add(surfaceGroup);
-
     }
+    
     public Image createImage(double size, float[][] noise) {
 
         int width = (int) size;
