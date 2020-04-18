@@ -15,6 +15,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -79,7 +80,7 @@ public class Viewer3D extends Application {
     private static final double SHIFT_MULTIPLIER = 10.0;
     private static final double MOUSE_SPEED = 0.1;
     private static final double ROTATION_SPEED = 3.0;
-    private static final double TRACK_SPEED = 0.3;
+    private static final double TRACK_SPEED = 10.0;
     private static final double ZOOM_SPEED = 0.1;
 
     private static final MenuBar menuBar = new MenuBar();
@@ -97,9 +98,6 @@ public class Viewer3D extends Application {
     public void start(Stage primaryStage) throws Exception {
         
         System.out.println("start()");
-        //Parent rootXML = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-        
-        //setUserAgentStylesheet(STYLESHEET_MODENA);
         
         rootV.setDepthTest(DepthTest.ENABLE);
 
@@ -120,25 +118,15 @@ public class Viewer3D extends Application {
 
         camera.setNearClip(Double.MIN_VALUE);
         scene.setCamera(camera);
-
-        //menubar
-        //buildMenuBar();
-        //menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
-
-        //accordian/tree/table structure
-        //buildAnalysisControls();
-
-        //BorderPane bPane = new BorderPane(scene);
         
         BorderPane bPane;
         bPane = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
 
-        //scene.heightProperty().bind(bPane.heightProperty());
-        //scene.widthProperty().bind(bPane.widthProperty());
-        //bPane.setTop(menuBar);
+        scene.heightProperty().bind(bPane.heightProperty());
+        scene.widthProperty().bind(bPane.widthProperty());
         bPane.setCenter(scene);
-        //bPane.setLeft(accordion);
-
+        bPane.setAlignment(scene, Pos.TOP_LEFT);
+        
         Scene mainScene = new Scene(bPane);
        
         handleKeyboard(mainScene, world);
@@ -148,38 +136,6 @@ public class Viewer3D extends Application {
         primaryStage.setScene(mainScene);
         primaryStage.show();
         
-    }
-    private void buildMenuBar() {
-        // create a menu 
-        Menu menuFile = new Menu("File");
-
-        // create menuitems 
-        MenuItem m1 = new MenuItem("Open");
-        MenuItem m2 = new MenuItem("Save");
-        MenuItem m3 = new MenuItem("Exit");
-        menuFile.getItems().add(m1);
-        menuFile.getItems().add(m2);
-        menuFile.getItems().add(m3);
-
-        Menu menuView = new Menu("View");
-        // create menuitems 
-        m1 = new MenuItem("Show Axes");
-        m2 = new MenuItem("Perspective");
-        m3 = new MenuItem("Parallel");
-        menuView.getItems().add(m1);
-        menuView.getItems().add(m2);
-        menuView.getItems().add(m3);
-
-        Menu menuHelp = new Menu("Help");
-        // create menuitems 
-        m1 = new MenuItem("About");
-        menuHelp.getItems().add(m1);
-
-        //menuBar.setMinHeight(40.0);
-        menuBar.setPadding(new Insets(6));
-
-        menuBar.getMenus().addAll(menuFile, menuView, menuHelp);
-
     }
 
     private void buildCamera() {
@@ -617,46 +573,7 @@ public class Viewer3D extends Application {
 
         return value;
     }
-    private void buildAnalysisControls() {
-        TitledPane pane1 = new TitledPane("Sections", new Label("Show all sections"));
-        TitledPane pane2 = new TitledPane("Material", new Label("Show all materials"));
-        TitledPane pane3 = new TitledPane("Recovery Points", new Label("Show recovery point table"));
 
-        //accordion.getPanes().add(pane1);
-        //accordion.getPanes().add(pane2);
-        //accordion.getPanes().add(pane3);
-        //accordion.setMinWidth(250.0);
-    }
-
-    public class rPoints {
-
-        private Double xr = null;
-        private Double yr = null;
-
-        public rPoints() {
-        }
-
-        public rPoints(Double xr, Double yr) {
-            this.xr = xr;
-            this.yr = yr;
-        }
-
-        public Double getX() {
-            return xr;
-        }
-
-        public void setX(Double xr) {
-            this.xr = xr;
-        }
-
-        public Double getY() {
-            return yr;
-        }
-
-        public void setY(Double yr) {
-            this.yr = yr;
-        }
-    }
     /**
      * @param args the command line arguments
      */

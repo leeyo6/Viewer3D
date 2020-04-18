@@ -38,17 +38,103 @@
 }
 /***Menu***/
 .menu > .label{
-    -fx-background-color: black;
+    -fx-background-color: rgb(30,30,30);
     -fx-text-fill: white;
     -fx-font-size: 13px;
 }
 .menu{
-    -fx-background-color: black;
-    -fx-text-fill: white;
+    -fx-background-color: rgb(30,30,30);
+    -fx-text-fill: whitesmoke;
     -fx-font-size: 13px;
 }
 .menu-bar {
-    -fx-background-color: black;
+    -fx-background-color: rgb(30,30,30);
     -fx-opacity: 0.75;
-    -fx-text-fill: white;
+    -fx-text-fill: whitesmoke;
 }
+
+/***Accordion***/
+.accordion .titled-pane > *.content {
+    -fx-background-color: rgba(40, 43, 48, 1) ;
+    -fx-opacity: 0.75;
+    -fx-text-fill: whitesmoke;
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.6) , 6, 0.0 , 0 , 0);
+}
+
+.titled-pane .title{
+    -fx-background-color: rgb(90,90,90);
+    -fx-text-fill: whitesmoke;
+}
+
+.titled-pane{
+    -fx-padding: 1px;
+    -fx-font-size: 13px;
+    -fx-text-fill: whitesmoke;
+}
+
+.titled-pane .title:hover, .titled-pane .title:focused {
+    -fx-background-color: derive(rgba(90, 90, 90, 1), -20%);
+}
+.accordion .label  {
+    -fx-padding: 2px;
+    -fx-text-fill: gray;
+}
+
+.titled-pane > .title > .arrow-button .arrow
+{
+-fx-background-color: transparent, goldenrod;
+-fx-background-insets: 1 0 -1 0, 0;
+-fx-padding: 0.25em 0.3125em 0.25em 0.3125em; /* 3 3.75 3 3.75 */
+-fx-shape: "M 0 0 h 7 l -3.5 4 z";
+}
+.titled-pane > .title > .arrow-button .arrow:focus
+{
+-fx-background-color: transparent, tomato;
+-fx-highlight-fill: transparent;
+}
+
+
+/*scroll pane*/
+.scroll-pane {
+    -fx-background-color: black;
+}
+
+.scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color:transparent;
+}
+
+.increment-button, .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: orange;
+    -fx-border-color: aquamarine;
+    -fx-background-radius: 0em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(90, 90, 90, 1);
+    -fx-background-radius: 5em;
+}
+
+/*tree view*/
+.tree-view{
+    -fx-background-color: rgba(90, 90, 90, 1) ;
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.6) , 6, 0.0 , 0 , 0);
+}
+
+.tree-cell:selected {
+    -fx-background-color: rgba(90, 90, 90, 1);
+    -fx-font-weight: bold ;
+    -fx-text-fill: whitesmoke;
+}
+.tree-cell {
+    -fx-background-color: rgba(30, 30, 30, 1);
+    -fx-font-weight: bold ;
+    -fx-text-fill: lightgray;
+}
+

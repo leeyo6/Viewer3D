@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane fx:id="ap" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewer3d.FXMLDocumentController">
    <top>
-      <VBox prefHeight="45.0" prefWidth="1080.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="9.0" prefWidth="1080.0" BorderPane.alignment="CENTER">
          <children>
             <MenuBar nodeOrientation="LEFT_TO_RIGHT" prefWidth="1080.0" stylesheets="@../CSS/mainStyle.css">
               <menus>
@@ -39,4 +44,25 @@
          </children>
       </VBox>
    </top>
+   <stylesheets>
+      <URL value="@../CSS/mainStyle.css" />
+      <URL value="@../CSS/paneStyle.css" />
+   </stylesheets>
+   <left>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <TreeView fx:id="modelTreeView" prefHeight="344.0" prefWidth="299.0" stylesheets="@../CSS/mainStyle.css" />
+            <TitledPane>
+               <content>
+                  <TreeTableView prefHeight="355.0" prefWidth="299.0">
+                    <columns>
+                      <TreeTableColumn prefWidth="75.0" text="C1" />
+                      <TreeTableColumn prefWidth="75.0" text="C2" />
+                    </columns>
+                  </TreeTableView>
+               </content>
+            </TitledPane>
+         </children>
+      </VBox>
+   </left>
 </BorderPane>

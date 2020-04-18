@@ -1,0 +1,9 @@
+.borderpane {
+    -fx-border-color: white;
+    -fx-border-width: 3px;
+}
+.root {
+-fx-background-color: rgba(40, 43, 48, 1);
+-fx-background-position: center center;
+-fx-background-size: 500 500;
+}
